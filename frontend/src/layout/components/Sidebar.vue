@@ -16,7 +16,7 @@
       </el-menu-item>
       <el-menu-item index="3" @click="goTo('history')">
         <i class="el-icon-document"></i>
-        <span slot="title">历史记录</span>
+        <span slot="title">提交记录</span>
       </el-menu-item>
     </el-menu>
   </el-aside>

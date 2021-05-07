@@ -14,6 +14,7 @@
     "docxtemplater": "^3.19.9",
     "element-ui": "^2.15.0",
     "file-saver": "^2.0.5",
+    "jquery": "^3.6.0",
     "pizzip": "^3.0.6",
     "vue": "^2.5.2",
     "vue-code-diff": "0.0.5",

@@ -30,7 +30,6 @@
               action="http://127.0.0.1:3000/submit/upload"
               method="post"
               enctype="multipart/form-data"
-              target="uploadFrame"
             >
               <el-table :data="fileNeededList">
                 <el-table-column
@@ -42,17 +41,16 @@
                   <template slot-scope="info">
                     <input
                       type="file"
-                      :name="info.row['filename'] + '_' + user"
+                      :name="
+                        releaseDate + '_' + info.row['filename'] + '_' + user
+                      "
                       size="50"
                     /> </template
                 ></el-table-column>
               </el-table>
               <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogTableVisible = false">取 消</el-button>
-                <!-- <input type="submit" value="上传" /> -->
-                <el-button type="primary" @click="submitUpload"
-                  >确 定</el-button
-                >
+                <input type="submit" value="上传" />
               </span>
             </form>
             <iframe
@@ -106,58 +104,58 @@ export default {
       });
       this.releaseDate = row["releaseDate"];
       this.dialogTableVisible = true;
-    },
-
-    /*
-     *点击“上传”按钮时调用
-     * 将[文件列表、用户名和任务发布时间]上传，文件列表内的格式为 [文件对象，重命名后的文件名] ，最后两项为用户名和任务发布时间
-     */
-    submitUpload() {
-      // 文件列表 [文件对象，重命名后的文件名]
-      // let fileList = {};
-      let req = {
-        releaseDate: this.releaseDate,
-        fileList: {}
-      };
-      let inputArr = document.getElementsByTagName("input");
-      for (let i = 0; i < inputArr.length; i++) {
-        console.log(inputArr[i].name);
-        let file = inputArr[i].files[0];
-        let tmp = {};
-        tmp["path"] = window.URL.createObjectURL(file);
-        tmp["name"] = file.name;
-        tmp["size"] = file.size;
-        tmp["type"] = file.type;
-        // Object.assign(tmp, file);
-        req.fileList[inputArr[i].name] = tmp;
-      }
-      console.log(req);
-      upload(req).then(res => {
-        // console.log(111);
-      });
-    },
-
-    /*
-     * 上传成功的钩子
-     */
-    handleSuccess() {
-      this.$message({
-        message: "任务提交成功！",
-        type: "success"
-      });
-      console.log("success", this.fileList, this.uploadFileList);
-    },
-
-    /*
-     * 上传失败的钩子
-     */
-    handleError() {
-      this.$message({
-        message: "任务提交失败，请重试！",
-        type: "error"
-      });
-      console.log("error", this.fileList, this.uploadFileList);
     }
+
+    // /*
+    //  *点击“上传”按钮时调用
+    //  * 将[文件列表、用户名和任务发布时间]上传，文件列表内的格式为 [文件对象，重命名后的文件名] ，最后两项为用户名和任务发布时间
+    //  */
+    // submitUpload() {
+    //   // 文件列表 [文件对象，重命名后的文件名]
+    //   // let fileList = {};
+    //   let req = {
+    //     releaseDate: this.releaseDate,
+    //     fileList: {}
+    //   };
+    //   let inputArr = document.getElementsByTagName("input");
+    //   for (let i = 0; i < inputArr.length; i++) {
+    //     console.log(inputArr[i].name);
+    //     let file = inputArr[i].files[0];
+    //     let tmp = {};
+    //     tmp["path"] = window.URL.createObjectURL(file);
+    //     tmp["name"] = file.name;
+    //     tmp["size"] = file.size;
+    //     tmp["type"] = file.type;
+    //     // Object.assign(tmp, file);
+    //     req.fileList[inputArr[i].name] = tmp;
+    //   }
+    //   console.log(req);
+    //   upload(req).then(res => {
+    //     // console.log(111);
+    //   });
+    // },
+
+    // /*
+    //  * 上传成功的钩子
+    //  */
+    // handleSuccess() {
+    //   this.$message({
+    //     message: "任务提交成功！",
+    //     type: "success"
+    //   });
+    //   console.log("success", this.fileList, this.uploadFileList);
+    // },
+
+    // /*
+    //  * 上传失败的钩子
+    //  */
+    // handleError() {
+    //   this.$message({
+    //     message: "任务提交失败，请重试！",
+    //     type: "error"
+    //   });
+    //   console.log("error", this.fileList, this.uploadFileList);
+    // }
   }
 };
 </script>
