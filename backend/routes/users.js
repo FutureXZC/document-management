@@ -1,9 +1,11 @@
 var express = require('express');
 var router = express.Router();
+const sql = require('../src/dao/sql');
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+// 用户登录
+router.post('/login', (req, res) => {
+  let formData = req.body;
+  sql.login(formData, res);
 });
 
 module.exports = router;

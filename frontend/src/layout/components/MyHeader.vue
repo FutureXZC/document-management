@@ -3,7 +3,7 @@
     <span>文件管理系统</span>
     <div class="userName">
       <el-dropdown>
-        <span>张三</span>
+        <span>{{ user }}</span>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>退出登录</el-dropdown-item>
         </el-dropdown-menu>
@@ -14,7 +14,15 @@
 
 <script>
 export default {
-  name: "MyHeader"
+  name: "MyHeader",
+  data() {
+    return {
+      user
+    };
+  },
+  created() {
+    this.user = window.sessionStorage.getItem("username");
+  }
 };
 </script>
 

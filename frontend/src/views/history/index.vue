@@ -44,6 +44,7 @@ export default {
      * 加载历史记录列表的数据，页面首次加载、删除记录、刷新页面时都会调用
      */
     getBaseList() {
+      // id: window.sessionStorage.getItem("id")
       this.loading = true;
       getHistory().then(res => {
         this.tableData = res;
@@ -55,7 +56,9 @@ export default {
      * 删除对应历史记录
      */
     handleDelete(index, row) {
-      deleteHistory({ submitDate: row["submitDate"] }).then(res => {
+      deleteHistory({
+        submitDate: row["submitDate"]
+      }).then(res => {
         if (res["code"] == 200) {
           this.$alert(res["msg"], "操作结果", {});
           this.tableData.splice(index, 1);

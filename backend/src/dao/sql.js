@@ -1,12 +1,43 @@
 const timeTools = require('../utils/timeTools');
 const sqlModel = require('../model/sqlDb');
 let db = sqlModel.db;
+let tokenTools = require('../token/token');
+
+function login(formData, res) {
+  /**
+   * 用户登录
+   * @param {formData} 包含用户的id、和密码，object
+   * @returns {isSuccess} 是否登录成功的标志，boolean
+   */
+  let sql = 'SELECT name FROM USERS WHERE id = ? AND pwd = ?';
+  let obj = [formData['id'], formData['pwd']];
+  sqlRead(sql, obj).then((username) => {
+    if (username != '') {
+      // 用户名和密码正确，向客户端发送一个token
+      tokenTools.setToken(username[0]['name']).then((token) => {
+        console.log(username[0]['name'] + '登录成功！');
+        res.send({
+          username: username[0]['name'],
+          msg: '登录成功！',
+          code: 200,
+          token: token,
+        });
+      });
+    } else {
+      console.log('登录失败！账号或密码错误！');
+      res.send({
+        msg: '账号或密码错误！',
+        code: 500,
+      });
+    }
+  });
+}
 
 function register(formData) {
   /**
    * 用户注册，将新用户信息填入数据库中的users表中
    * @param {formData} 包含用户的id、用户名和密码，object
-   * @returns {isSuccess} 是否注册成功的标志，boolean
+   * @returns {username} 是否注册成功的标志，boolean
    */
   let isSuccess = true;
   let sql = 'INSERT INTO `users`(`id`, `name`, `pwd`) VALUES (?, ?, ?)';
@@ -157,6 +188,7 @@ async function sqlRead(sql, params) {
 }
 
 module.exports = {
+  login,
   register,
   addTask,
   deleteHistory,

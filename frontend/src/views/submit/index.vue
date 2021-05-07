@@ -73,7 +73,7 @@ export default {
     return {
       submitList: [], // 任务列表的表格数据
       fileNeededList: [], // 需求文件列表的表格数据
-      user: "张三", // 用户名
+      user: "", // 用户名
       releaseDate: "", // 点击对应行的“详情”按钮时，记录该行任务的发布日期
       dialogTableVisible: false,
       loading: false
@@ -82,6 +82,7 @@ export default {
 
   created() {
     // 加载任务列表的表格数据
+    this.user = window.sessionStorage.getItem("username");
     this.loading = true;
     getSubmitList().then(res => {
       this.submitList = res;
