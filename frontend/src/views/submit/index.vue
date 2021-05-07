@@ -74,7 +74,7 @@ export default {
       submitList: [], // 任务列表的表格数据
       fileNeededList: [], // 需求文件列表的表格数据
       user: "张三", // 用户名
-      releaseDate: "",
+      releaseDate: "", // 点击对应行的“详情”按钮时，记录该行任务的发布日期
       dialogTableVisible: false,
       loading: false
     };
@@ -102,60 +102,10 @@ export default {
           });
         }
       });
+      // 点击对应行的“详情”按钮时，记录该行任务的发布日期
       this.releaseDate = row["releaseDate"];
       this.dialogTableVisible = true;
     }
-
-    // /*
-    //  *点击“上传”按钮时调用
-    //  * 将[文件列表、用户名和任务发布时间]上传，文件列表内的格式为 [文件对象，重命名后的文件名] ，最后两项为用户名和任务发布时间
-    //  */
-    // submitUpload() {
-    //   // 文件列表 [文件对象，重命名后的文件名]
-    //   // let fileList = {};
-    //   let req = {
-    //     releaseDate: this.releaseDate,
-    //     fileList: {}
-    //   };
-    //   let inputArr = document.getElementsByTagName("input");
-    //   for (let i = 0; i < inputArr.length; i++) {
-    //     console.log(inputArr[i].name);
-    //     let file = inputArr[i].files[0];
-    //     let tmp = {};
-    //     tmp["path"] = window.URL.createObjectURL(file);
-    //     tmp["name"] = file.name;
-    //     tmp["size"] = file.size;
-    //     tmp["type"] = file.type;
-    //     // Object.assign(tmp, file);
-    //     req.fileList[inputArr[i].name] = tmp;
-    //   }
-    //   console.log(req);
-    //   upload(req).then(res => {
-    //     // console.log(111);
-    //   });
-    // },
-
-    // /*
-    //  * 上传成功的钩子
-    //  */
-    // handleSuccess() {
-    //   this.$message({
-    //     message: "任务提交成功！",
-    //     type: "success"
-    //   });
-    //   console.log("success", this.fileList, this.uploadFileList);
-    // },
-
-    // /*
-    //  * 上传失败的钩子
-    //  */
-    // handleError() {
-    //   this.$message({
-    //     message: "任务提交失败，请重试！",
-    //     type: "error"
-    //   });
-    //   console.log("error", this.fileList, this.uploadFileList);
-    // }
   }
 };
 </script>

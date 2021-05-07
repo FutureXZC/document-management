@@ -1,12 +1,13 @@
-const sqlTools = require('./sql');
+const sql = require('./sql');
 const fileTools = require('../utils/fileTools');
+const timeTools = require('../utils/timeTools');
 
 function upload(fileList, res) {
   //   取出发布时间
   let releaseDate = fileList[0]['fieldname'].split('_')[0];
   //   将formData的key改为真实的文件名，便于后续遍历时的存储
-  let sql = 'select name from taskList where releaseDate = ?';
-  sqlTools.sqlRead(sql, [releaseDate]).then((taskName) => {
+  let s = 'select name from taskList where releaseDate = ?';
+  sql.sqlRead(s, [releaseDate]).then((taskName) => {
     // 查询得到任务名
     taskName = taskName[0]['name'];
     let toDoList = [];
@@ -40,7 +41,7 @@ function upload(fileList, res) {
       );
     }
     // step 3、将提交记录到数据库中
-    // something
+    toDoList.push(sql.addHistory(timeTools.getCurDate(), releaseDate));
     // 执行toDoList，并获取执行结果
     Promise.all(toDoList).then((result) => {
       console.log(result);

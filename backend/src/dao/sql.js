@@ -9,7 +9,7 @@ function register(formData) {
    * @returns {isSuccess} 是否注册成功的标志，boolean
    */
   let isSuccess = true;
-  let sql = 'INSERT INTO `users`(`id`, `name`, `pwd`) VALUES (?, ?, ?);';
+  let sql = 'INSERT INTO `users`(`id`, `name`, `pwd`) VALUES (?, ?, ?)';
   let obj = [formData['id'], formData['name'], formData['pwd']];
   db.run(sql, obj, (err) => {
     if (err) {
@@ -35,14 +35,14 @@ function addTask(formData) {
   // 记录任务列表
   db.serialize(function () {
     let sql =
-      'INSERT INTO taskList(`releaseDate`, `deadline`, `name`, `desc`, `teacherId`) VALUES (?, ?, ?, ?, ?)';
+      'INSERT INTO taskList(`releaseDate`, `deadline`, `name`, `desc`, `teacher`) VALUES (?, ?, ?, ?, ?)';
     let obj = [
       releaseDate,
       deadline,
       formData['name'],
       formData['desc'],
-      // formData['teacherId'],
-      123,
+      // formData['teacher'],
+      '张三',
     ];
     db.run(sql, obj, (err) => {
       if (err) {
@@ -88,10 +88,31 @@ function deleteHistory(submitData) {
   db.run(sql, [submitData], (err) => {
     if (err) {
       isSuccess = false;
-      console.log(err);
       console.log('删除历史记录失败！请重试！');
+      console.log(err);
     } else {
       console.log('删除历史记录成功！');
+    }
+  });
+  return isSuccess;
+}
+
+function addHistory(submitDate, releaseDate) {
+  /**
+   * 将操作记录到历史记录
+   * @param {submitDate} 提交日期，string
+   * @param {releaseDate} 发布日期，string
+   */
+  let isSuccess = true;
+  let sql = 'INSERT INTO `history`(`submitDate`, `releaseDate`) VALUES (?, ?)';
+  let obj = [submitDate, releaseDate];
+  db.run(sql, obj, (err) => {
+    if (err) {
+      isSuccess = false;
+      console.log(err);
+      console.log('历史记录添加失败，请重试！');
+    } else {
+      console.log('历史记录添加成功！');
     }
   });
   return isSuccess;
@@ -121,15 +142,15 @@ async function sqlGetAll(sql, params, res) {
    * @param {res} 响应体对象，object
    */
   let data = await sqlRun(sql, params);
+  data = data || [];
   res.send(data);
 }
 
 async function sqlRead(sql, params) {
   /**
-   * 解析sqlRun函数执行sql语句的结果，并通过res将执行结果返回给前端
+   * 解析sqlRun函数执行sql语句的结果
    * @param {sql} 将要执行的sql语句，string
    * @param {params} sql语句的参数列表，array
-   * @param {res} 响应体对象，object
    */
   let data = await sqlRun(sql, params);
   return data;
@@ -139,6 +160,7 @@ module.exports = {
   register,
   addTask,
   deleteHistory,
+  addHistory,
   sqlGetAll,
   sqlRead,
 };

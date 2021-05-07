@@ -92,6 +92,9 @@ export default {
     };
   },
   methods: {
+    /*
+     * 提交任务列表
+     */
     onSubmit(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
@@ -119,12 +122,20 @@ export default {
         }
       });
     },
+
+    /*
+     * 删除对应文件信息
+     */
     removeFile(item) {
       var index = this.form.fileList.indexOf(item);
       if (index !== -1) {
         this.form.fileList.splice(index, 1);
       }
     },
+
+    /*
+     * 添加一个文件信息
+     */
     addFile() {
       this.form.fileList.push({
         filename: ""
