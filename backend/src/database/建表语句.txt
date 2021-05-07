@@ -1,0 +1,34 @@
+打开sqlite3的外键开关（默认关闭）：
+pragma foreign_keys=on;
+
+用户表：
+create table users(
+	id int primary key not null,
+	name varchar(5) not null,
+	pwd varchar(18) not null
+);
+
+任务列表：
+create table taskList(
+	releaseDate char(19) primary key not null,
+	deadline char(19) not null,
+	name varchar(20) not null,
+	desc varchar(100) not null,
+	teacherId int not null,
+	foreign key (teacherId) references users(id)
+);
+
+任务详细信息表（需求文件列表）：
+create table taskInfo(
+	releaseDate char(19) not null,
+	filename varchar(20) not null,
+	primary key (releaseDate, filename),
+	foreign key (releaseDate) references taskList(releaseDate)
+);
+
+历史记录表：
+create table history(
+	submitDate char(19) primary key not null,
+	releaseDate char(19) not null,
+	foreign key (releaseDate) references taskList(releaseDate)
+);
