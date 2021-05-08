@@ -80,14 +80,13 @@ function addTask(formData) {
    */
   let isSuccess = true;
   let releaseDate = timeTools.getCurDate();
-  let deadline = timeTools.joinTime(formData['date1'], formData['date2']);
   // 记录任务列表
   db.serialize(function () {
     let sql =
       'INSERT INTO taskList(`releaseDate`, `deadline`, `name`, `desc`, `teacher`, `teacherId`) VALUES (?, ?, ?, ?, ?, ?)';
     let obj = [
       releaseDate,
-      deadline,
+      formData['deadline'],
       formData['name'],
       formData['desc'],
       formData['teacher'],

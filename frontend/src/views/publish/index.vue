@@ -116,10 +116,24 @@ export default {
     onSubmit(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
+          let timeArr = [
+            this.form.date1.getFullYear(),
+            "-",
+            this.form.date1.getMonth() + 1,
+            "-",
+            this.form.date1.getDate(),
+            " ",
+            this.form.date2.toString().split(" ")[4]
+          ];
+          for (let i = 0; i <= 4; i += 2) {
+            if (timeArr[i] < 10) {
+              timeArr[i] = "0" + timeArr[i];
+            }
+          }
+          let deadline = timeArr.join("");
           let formData = {
             name: this.form.name,
-            date1: this.form.date1,
-            date2: this.form.date2,
+            deadline: deadline,
             desc: this.form.desc,
             teacher: window.sessionStorage.getItem("username"),
             teacherId: window.sessionStorage.getItem("id"),
