@@ -134,6 +134,7 @@ export default {
         this.$set(row, "loadingFileNeededList", false);
       });
     },
+
     /*
      * 按钮上传事件
      */
@@ -164,15 +165,19 @@ export default {
 .submit-wrap {
   padding: 20px;
 }
+
 .tips {
   font-size: 16px;
 }
+
 .fileBtn {
   font-size: 14px;
 }
+
 .pagination {
   margin-top: 20px;
 }
+
 .el-dialog__wrapper {
   transition-duration: 0.3s;
 }

@@ -1,26 +1,13 @@
 <template>
   <div class="publish-wrap">
-    <el-form ref="form" :model="form" label-width="80px">
-      <el-form-item
-        label="任务名称"
-        prop="name"
-        :rules="{
-          required: true,
-          message: '文件名不能为空',
-          trigger: 'blur'
-        }"
-      >
-        <el-input v-model="form.name" placeholder="请填写任务名称"></el-input>
+    <el-form ref="form" :model="form" label-width="80px" :rules="rules">
+      <el-form-item label="任务名称" prop="name">
+        <el-input
+          v-model="form.name"
+          placeholder="请填写任务名称，最多20个字符"
+        ></el-input>
       </el-form-item>
-      <el-form-item
-        label="截止时间"
-        prop="date1"
-        :rules="{
-          required: true,
-          message: '截止日期不能为空',
-          trigger: 'blur'
-        }"
-      >
+      <el-form-item label="截止时间" prop="date1">
         <el-col :span="11">
           <el-date-picker
             type="date"
@@ -38,12 +25,14 @@
           ></el-time-picker>
         </el-col>
       </el-form-item>
-      <el-form-item label="任务描述">
+      <el-form-item label="任务描述" prop="desc">
         <el-input
           type="textarea"
           v-model="form.desc"
-          placeholder="描述该任务的一些具体要求"
-          :autosize="{ minRows: 3 }"
+          placeholder="描述该任务的一些具体要求，最多100个字符"
+          :autosize="{ minRows: 4 }"
+          maxlength="100"
+          show-word-limit
         ></el-input>
       </el-form-item>
       <el-form-item
@@ -59,8 +48,9 @@
       >
         <el-input
           v-model="file.filename"
-          placeholder="该任务要保存的文件名"
+          placeholder="该任务要保存的文件名，最多20个字符"
           class="filename"
+          maxlength="20"
         ></el-input
         ><el-button @click.prevent="removeFile(file)">删除</el-button>
       </el-form-item>
@@ -81,6 +71,29 @@ import { addTask } from "@/api/publish";
 export default {
   name: "publish",
   data() {
+    let validateName = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("文件名不能为空"));
+      } else {
+        callback();
+      }
+    };
+    let validateDate1 = (rule, value, callback) => {
+      if (this.form.date1 === "") {
+        callback(new Error("截止日期不能为空"));
+      } else if (this.form.date2 === "") {
+        callback(new Error("截止日期的时间段不能为空"));
+      } else {
+        callback();
+      }
+    };
+    let validateDesc = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("任务描述不能为空"));
+      } else {
+        callback();
+      }
+    };
     return {
       form: {
         name: "",
@@ -88,6 +101,11 @@ export default {
         date2: "",
         desc: "",
         fileList: [{ filename: "" }]
+      },
+      rules: {
+        name: [{ required: true, validator: validateName, trigger: "blur" }],
+        date1: [{ required: true, validator: validateDate1, trigger: "blur" }],
+        desc: [{ required: true, validator: validateDesc, trigger: "blur" }]
       }
     };
   },
@@ -110,15 +128,12 @@ export default {
             formData.fileList.push(this.form.fileList[i]["filename"]);
           }
           addTask(formData).then(res => {
-            console.log(res);
+            this.$message({
+              message: "任务创建成功！",
+              type: "success"
+            });
           });
-          this.$message({
-            message: "任务创建成功！",
-            type: "success"
-          });
-          console.log(formData);
         } else {
-          console.log("数据不全，提交失败！");
           return false;
         }
       });
@@ -150,10 +165,12 @@ export default {
 .publish-wrap {
   padding: 20px;
 }
+
 .line {
   text-align: center;
   font-size: 16px;
 }
+
 .filename {
   width: 80%;
   margin-right: 8px;

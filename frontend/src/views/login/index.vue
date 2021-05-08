@@ -91,7 +91,6 @@ export default {
         if (valid) {
           // 后台通过验证则跳转到操作界面
           login(this.form).then(res => {
-            console.log(res);
             if (res.code === 200) {
               window.sessionStorage.setItem("token", res.token);
               window.sessionStorage.setItem("username", res.username);
@@ -102,7 +101,6 @@ export default {
               });
               this.$router.push("/submit");
             } else {
-              console.log(res.msg);
               this.$message.error("账号或密码错误");
             }
           });

@@ -81,7 +81,6 @@ export default {
         currentPage: this.currentPage,
         pageSize: this.pageSize
       }).then(res => {
-        console.log(res);
         this.tableData = res.data;
         this.totalCount = res.totalCount;
       });
@@ -95,6 +94,7 @@ export default {
 .history-wrap {
   padding: 20px;
 }
+
 .pagination {
   margin-top: 20px;
 }

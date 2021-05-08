@@ -136,7 +136,6 @@ export default {
             pwd: this.form.pwd
           };
           register(formData).then(res => {
-            console.log(res);
             if (res.code === 200) {
               this.$message({
                 message: res.msg,
