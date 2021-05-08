@@ -84,13 +84,14 @@ function addTask(formData) {
   // 记录任务列表
   db.serialize(function () {
     let sql =
-      'INSERT INTO taskList(`releaseDate`, `deadline`, `name`, `desc`, `teacher`) VALUES (?, ?, ?, ?, ?)';
+      'INSERT INTO taskList(`releaseDate`, `deadline`, `name`, `desc`, `teacher`, `teacherId`) VALUES (?, ?, ?, ?, ?, ?)';
     let obj = [
       releaseDate,
       deadline,
       formData['name'],
       formData['desc'],
       formData['teacher'],
+      formData['teacherId'],
     ];
     db.run(sql, obj, (err) => {
       if (err) {
@@ -123,6 +124,62 @@ function addTask(formData) {
     }
   });
   return isSuccess;
+}
+
+function deleteTask(releaseDate, res) {
+  /**
+   * 删除已发布的任务
+   * @param {releaseDate} 任务发布日期，string
+   * @param {res} 响应体对象，object
+   */
+  // step 1、先删除需求文件列表
+  let sql = 'DELETE FROM taskInfo WHERE releaseDate = ?';
+  toDoList = [];
+  toDoList.push(
+    db.run(sql, [releaseDate], (err) => {
+      if (err) {
+        console.log('删除需求文件列表失败，请重试');
+        console.log(err);
+        return false;
+      } else {
+        console.log('删除需求文件列表成功');
+        return true;
+      }
+    })
+  );
+  // step 2、后删除任务列表
+  sql = 'DELETE FROM taskList WHERE releaseDate = ?';
+  toDoList.push(
+    db.run(sql, [releaseDate], (err) => {
+      if (err) {
+        console.log('删除任务列表失败，请重试');
+        console.log(err);
+        return false;
+      } else {
+        console.log('删除任务列表成功');
+        return true;
+      }
+    })
+  );
+  Promise.all(toDoList).then((result) => {
+    console.log(result);
+    let flag = true;
+    for (let i = 0; i < result.length; i++) {
+      flag = flag && result[i];
+    }
+    // 根据上述所有操作是否执行成功进行返回
+    if (flag) {
+      res.send({
+        msg: '删除任务成功！',
+        code: 200,
+      });
+    } else {
+      res.send({
+        msg: '删除任务失败',
+        code: 500,
+      });
+    }
+  });
 }
 
 function deleteHistory(submitData) {
@@ -227,6 +284,7 @@ module.exports = {
   login,
   register,
   addTask,
+  deleteTask,
   deleteHistory,
   addHistory,
   sqlGetAll,

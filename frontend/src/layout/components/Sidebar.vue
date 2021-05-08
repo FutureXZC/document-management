@@ -14,9 +14,13 @@
         <i class="el-icon-info"></i>
         <span slot="title">任务发布</span>
       </el-menu-item>
-      <el-menu-item index="3" @click="goTo('history')">
+      <el-menu-item index="3" @click="goTo('submitHistory')">
         <i class="el-icon-document"></i>
         <span slot="title">提交记录</span>
+      </el-menu-item>
+      <el-menu-item index="4" @click="goTo('publishHistory')">
+        <i class="el-icon-document"></i>
+        <span slot="title">发布记录</span>
       </el-menu-item>
     </el-menu>
   </el-aside>
@@ -31,8 +35,10 @@ export default {
         return "1";
       } else if (this.$route.path == "/publish") {
         return "2";
-      } else {
+      } else if (this.$route.path == "/submitHistory") {
         return "3";
+      } else {
+        return "4";
       }
     }
   },

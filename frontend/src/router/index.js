@@ -48,8 +48,12 @@ export default new Router({
           component: () => import("@/views/publish")
         },
         {
-          path: "history",
-          component: () => import("@/views/history")
+          path: "submitHistory",
+          component: () => import("@/views/submitHistory")
+        },
+        {
+          path: "publishHistory",
+          component: () => import("@/views/publishHistory")
         }
       ]
     }

@@ -1,21 +1,27 @@
 <template>
   <div class="history-wrap">
     <el-table :data="tableData" style="width: 100%" border v-loading="loading">
-      <el-table-column prop="submitDate" label="提交日期" width="160">
+      <el-table-column prop="releaseDate" label="发布日期" width="160">
+      </el-table-column>
+      <el-table-column prop="deadline" label="截止日期" width="160">
       </el-table-column>
       <el-table-column prop="name" label="任务名称" width="200">
       </el-table-column>
       <el-table-column prop="desc" label="任务描述" width="320">
       </el-table-column>
-      <el-table-column prop="teacher" label="发布老师" width="100">
-      </el-table-column>
-      <el-table-column label="操作" width="120">
+      <el-table-column label="操作" width="240">
         <template slot-scope="scope">
+          <el-button
+            type="success"
+            plain
+            @click="handleDownload(scope.$index, scope.row)"
+            >下载文件</el-button
+          >
           <el-button
             type="danger"
             plain
             @click="handleDelete(scope.$index, scope.row)"
-            >删除记录</el-button
+            >删除任务</el-button
           >
         </template>
       </el-table-column>
@@ -34,9 +40,9 @@
 </template>
 
 <script>
-import { getHistory, deleteHistory } from "@/api/history";
+import { getPublishedTask, deleteTask } from "@/api/history";
 export default {
-  name: "history",
+  name: "publishHistory",
   data() {
     return {
       tableData: [],
@@ -54,11 +60,11 @@ export default {
 
   methods: {
     /*
-     * 删除对应历史记录
+     * 删除对应任务记录
      */
     handleDelete(index, row) {
-      deleteHistory({
-        submitDate: row.submitDate
+      deleteTask({
+        releaseDate: row.releaseDate
       }).then(res => {
         if (res.code == 200) {
           this.$alert(res.msg, "操作结果", {});
@@ -76,7 +82,7 @@ export default {
     handleCurrentChange(val) {
       this.currentPage = val;
       this.loading = true;
-      getHistory({
+      getPublishedTask({
         submitId: window.sessionStorage.getItem("id"),
         currentPage: this.currentPage,
         pageSize: this.pageSize
