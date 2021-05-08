@@ -8,4 +8,10 @@ router.post('/login', (req, res) => {
   sql.login(formData, res);
 });
 
+// 用户注册
+router.post('/register', (req, res) => {
+  let formData = req.body;
+  sql.register(formData, res);
+});
+
 module.exports = router;

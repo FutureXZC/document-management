@@ -5,34 +5,53 @@
       <img src="static/images/title.png" alt="文件管理系统" class="title" />
     </div>
     <el-form
-      ref="loginForm"
+      ref="registerForm"
       :model="form"
       :rules="rules"
       label-width="80px"
       class="login-box"
-      label-position="top"
     >
-      <h3 class="login-title">欢迎登录</h3>
+      <h3 class="login-title">用户注册</h3>
       <el-form-item label="账号" prop="id" size="large">
         <div class="login-form-wrap">
           <el-input
             type="text"
-            placeholder="账号为您的工号"
+            placeholder="账号建议使用您的工号"
             v-model="form.id"
+          />
+        </div>
+      </el-form-item>
+      <el-form-item label="用户名" prop="name" size="large">
+        <div class="login-form-wrap">
+          <el-input
+            type="text"
+            placeholder="用户名应为您的姓名"
+            v-model="form.name"
           />
         </div>
       </el-form-item>
       <el-form-item label="密码" prop="pwd">
         <div class="login-form-wrap">
-          <el-input placeholder="请输入密码" v-model="form.pwd" show-password />
+          <el-input
+            placeholder="可输入6-18位字母、数字和下划线"
+            v-model="form.pwd"
+            show-password
+          />
+        </div>
+      </el-form-item>
+      <el-form-item label="确认密码" prop="pwd2">
+        <div class="login-form-wrap">
+          <el-input
+            placeholder="请再次输入密码"
+            v-model="form.pwd2"
+            show-password
+          />
         </div>
       </el-form-item>
       <el-form-item>
         <div class="login-btn">
           <el-button v-on:click="register">注册</el-button>
-          <el-button type="primary" v-on:click="onSubmit('loginForm')"
-            >登录</el-button
-          >
+          <el-button type="primary" v-on:click="toLogin">前往登录</el-button>
         </div>
       </el-form-item>
     </el-form>
@@ -40,15 +59,22 @@
 </template>
 
 <script>
-import { login } from "@/api/user";
+import { register } from "@/api/user";
 export default {
-  name: "Login",
+  name: "Register",
   data() {
     let validateid = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("账号不能为空"));
       } else if (!/^[0-9]+$/.test(value)) {
         callback(new Error("账号只能数字"));
+      } else {
+        callback();
+      }
+    };
+    let validatename = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("用户名不能为空"));
       } else {
         callback();
       }
@@ -62,61 +88,70 @@ export default {
         callback();
       }
     };
+    let validatePwd2 = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请再次输入密码以完成确认"));
+      } else if (value != this.form.pwd) {
+        callback(new Error("两次输入密码不一致，请检查"));
+      } else if (!/^\w{6,18}$/.test(value)) {
+        callback(new Error("密码只能输入6-18位字母、数字和下划线"));
+      } else {
+        callback();
+      }
+    };
     return {
       form: {
         id: "",
-        pwd: ""
+        name: "",
+        pwd: "",
+        pwd2: ""
       },
       rules: {
         id: [{ required: true, validator: validateid, trigger: "blur" }],
-        pwd: [{ required: true, validator: validatePwd, trigger: "blur" }]
+        name: [{ required: true, validator: validatename, trigger: "blur" }],
+        pwd: [{ required: true, validator: validatePwd, trigger: "blur" }],
+        pwd2: [{ required: true, validator: validatePwd2, trigger: "blur" }]
       }
     };
   },
 
-  created() {
-    // 检测到用户登录过且没有退出系统，则自动跳转
-    if (window.sessionStorage.getItem("token")) {
-      this.$router.push("/submit");
-    }
-  },
-
   methods: {
     /*
-     * 用户登录
+     * 转到用户登录界面
      */
-    onSubmit(formName) {
-      // 为表单绑定验证功能
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          // 后台通过验证则跳转到操作界面
-          login(this.form).then(res => {
-            console.log(res);
-            if (res.code === 200) {
-              window.sessionStorage.setItem("token", res.token);
-              window.sessionStorage.setItem("username", res.username);
-              window.sessionStorage.setItem("id", this.form.id);
-              this.$message({
-                message: "登录成功",
-                type: "success"
-              });
-              this.$router.push("/submit");
-            } else {
-              console.log(res.msg);
-              this.$message.error("账号或密码错误");
-            }
-          });
-        } else {
-          return false;
-        }
-      });
+    toLogin() {
+      this.$router.push("/login");
     },
 
     /*
      * 用户注册
      */
     register() {
-      this.$router.push("/register");
+      this.$refs["registerForm"].validate(valid => {
+        if (valid) {
+          // 表单通过验证即可提交注册
+          let formData = {
+            id: this.form.id,
+            name: this.form.name,
+            pwd: this.form.pwd
+          };
+          register(formData).then(res => {
+            console.log(res);
+            if (res.code === 200) {
+              this.$message({
+                message: res.msg,
+                type: "success"
+              });
+            } else if (res.code === 202) {
+              this.$message.warning(res.msg);
+            } else {
+              this.$message.error(res.msg);
+            }
+          });
+        } else {
+          return false;
+        }
+      });
     }
   }
 };
@@ -164,7 +199,7 @@ export default {
 
 .login-title {
   text-align: center;
-  margin: 0 auto 20px auto;
+  margin: 0 auto 10px auto;
   color: #303133;
 }
 

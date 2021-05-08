@@ -30,6 +30,11 @@ export default new Router({
       hidden: true
     },
     {
+      path: "/register",
+      component: () => import("@/views/register"),
+      hidden: true
+    },
+    {
       path: "/",
       redirect: "/login",
       component: Layout,

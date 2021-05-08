@@ -7,51 +7,69 @@ function login(formData, res) {
   /**
    * 用户登录
    * @param {formData} 包含用户的id、和密码，object
-   * @returns {isSuccess} 是否登录成功的标志，boolean
+   * @param {res} 响应体对象，object
    */
+
   let sql = 'SELECT name FROM USERS WHERE id = ? AND pwd = ?';
   let obj = [formData['id'], formData['pwd']];
   sqlRead(sql, obj).then((username) => {
     if (username != '') {
       // 用户名和密码正确，向客户端发送一个token
       tokenTools.setToken(username[0]['name']).then((token) => {
-        console.log(username[0]['name'] + '登录成功！');
+        console.log(username[0]['name'] + '登录成功');
         res.send({
           username: username[0]['name'],
-          msg: '登录成功！',
+          msg: '登录成功',
           code: 200,
           token: token,
         });
       });
     } else {
-      console.log('登录失败！账号或密码错误！');
+      console.log('登录失败，账号或密码错误');
       res.send({
-        msg: '账号或密码错误！',
+        msg: '账号或密码错误',
         code: 500,
       });
     }
   });
 }
 
-function register(formData) {
+function register(formData, res) {
   /**
    * 用户注册，将新用户信息填入数据库中的users表中
    * @param {formData} 包含用户的id、用户名和密码，object
-   * @returns {username} 是否注册成功的标志，boolean
+   * @param {res} 响应体对象，object
    */
-  let isSuccess = true;
-  let sql = 'INSERT INTO `users`(`id`, `name`, `pwd`) VALUES (?, ?, ?)';
-  let obj = [formData['id'], formData['name'], formData['pwd']];
-  db.run(sql, obj, (err) => {
-    if (err) {
-      isSuccess = false;
-      console.log(err);
-      console.log('用户注册失败，请重试！');
+  let sql = 'SELECT * FROM users WHERE id = ?';
+  let obj = [formData['id']];
+  sqlRead(sql, obj).then((data) => {
+    if (data != '') {
+      res.send({
+        msg: '账号已存在，请直接登录或重新设置账号',
+        code: 202,
+      });
     } else {
-      console.log('用户注册成功！');
+      sql = 'INSERT INTO `users`(`id`, `name`, `pwd`) VALUES (?, ?, ?)';
+      obj = [formData['id'], formData['name'], formData['pwd']];
+      db.run(sql, obj, (err) => {
+        if (err) {
+          isSuccess = false;
+          console.log(err);
+          console.log('用户注册失败，请重试');
+          res.send({
+            msg: '用户注册失败，请重试',
+            code: 500,
+          });
+        } else {
+          console.log('用户注册成功');
+          res.send({
+            msg: '用户注册成功',
+            code: 200,
+          });
+        }
+      });
     }
   });
-  return isSuccess;
 }
 
 function addTask(formData) {
@@ -78,10 +96,10 @@ function addTask(formData) {
       if (err) {
         isSuccess = false;
         console.log(err);
-        console.log('任务创建失败，请重试！');
+        console.log('任务创建失败，请重试');
         return;
       } else {
-        console.log('任务创建成功！');
+        console.log('任务创建成功');
       }
     });
     // 记录任务详细信息表（需求文件列表）
@@ -94,14 +112,14 @@ function addTask(formData) {
           if (err) {
             isSuccess = false;
             console.log(err);
-            console.log('任务需求的文件列表记录失败，请重试！');
+            console.log('任务需求的文件列表记录失败，请重试');
           } else {
-            console.log('任务需求的文件列表记录成功！');
+            console.log('任务需求的文件列表记录成功');
           }
         });
       }
     } else {
-      console.log('任务需求的文件列表记录失败，请重试！');
+      console.log('任务需求的文件列表记录失败，请重试');
     }
   });
   return isSuccess;
@@ -118,10 +136,10 @@ function deleteHistory(submitData) {
   db.run(sql, [submitData], (err) => {
     if (err) {
       isSuccess = false;
-      console.log('删除历史记录失败！请重试！');
+      console.log('删除历史记录失败，请重试');
       console.log(err);
     } else {
-      console.log('删除历史记录成功！');
+      console.log('删除历史记录成功');
     }
   });
   return isSuccess;
@@ -142,9 +160,9 @@ function addHistory(submitDate, releaseDate, id) {
     if (err) {
       isSuccess = false;
       console.log(err);
-      console.log('历史记录添加失败，请重试！');
+      console.log('历史记录添加失败，请重试');
     } else {
-      console.log('历史记录添加成功！');
+      console.log('历史记录添加成功');
     }
   });
   return isSuccess;
@@ -199,7 +217,7 @@ async function sqlRead(sql, params) {
   /**
    * 解析sqlRun函数执行sql语句的结果
    * @param {sql} 将要执行的sql语句，string
-   * @param {params} sql语句的参数列表，array
+   * @param {params} 将要执行的sql语句的参数列表，array
    */
   let data = await sqlRun(sql, params);
   return data;
