@@ -3,9 +3,9 @@
     <span>文件管理系统</span>
     <div class="userName">
       <el-dropdown>
-        <span>{{ user }}</span>
+        <span>{{ this.user }}</span>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>退出登录</el-dropdown-item>
+          <el-dropdown-item @click.native="logout">退出登录</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
@@ -17,11 +17,18 @@ export default {
   name: "MyHeader",
   data() {
     return {
-      user
+      user: ""
     };
   },
   created() {
     this.user = window.sessionStorage.getItem("username");
+  },
+  methods: {
+    logout() {
+      console.log("quit");
+      window.sessionStorage.clear();
+      this.$router.push("/login");
+    }
   }
 };
 </script>

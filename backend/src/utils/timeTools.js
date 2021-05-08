@@ -39,7 +39,9 @@ function joinTime(date1, date2) {
    * @param {date2} 提供时间（时分秒）的时间对象 Date
    * @returns {joinTime} 提取后的时间，格式：yyyy-mm-dd hh:mm:ss string
    */
+  console.log(date1, date2);
   let joinTime = date1.slice(0, 10) + ' ' + date2.slice(11, 19);
+  console.log(joinTime);
   return joinTime;
 }
 

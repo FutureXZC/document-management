@@ -1,6 +1,8 @@
-export function getSubmitList() {
+export function getSubmitList(pageInfo) {
   return fetch("http://127.0.0.1:3000/submit/getSubmitList", {
-    method: "post"
+    method: "post",
+    body: JSON.stringify(pageInfo),
+    headers: { "Content-Type": "application/json" }
   }).then(res => {
     return res.json();
   });

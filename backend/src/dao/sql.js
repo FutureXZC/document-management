@@ -72,8 +72,7 @@ function addTask(formData) {
       deadline,
       formData['name'],
       formData['desc'],
-      // formData['teacher'],
-      '张三',
+      formData['teacher'],
     ];
     db.run(sql, obj, (err) => {
       if (err) {
@@ -128,15 +127,17 @@ function deleteHistory(submitData) {
   return isSuccess;
 }
 
-function addHistory(submitDate, releaseDate) {
+function addHistory(submitDate, releaseDate, id) {
   /**
    * 将操作记录到历史记录
    * @param {submitDate} 提交日期，string
    * @param {releaseDate} 发布日期，string
+   * @param {id} 提交者的id，string
    */
   let isSuccess = true;
-  let sql = 'INSERT INTO `history`(`submitDate`, `releaseDate`) VALUES (?, ?)';
-  let obj = [submitDate, releaseDate];
+  let sql =
+    'INSERT INTO `history`(`submitDate`, `releaseDate`,`id`) VALUES (?, ?, ?)';
+  let obj = [submitDate, releaseDate, id];
   db.run(sql, obj, (err) => {
     if (err) {
       isSuccess = false;
@@ -165,16 +166,33 @@ function sqlRun(sql, params) {
   });
 }
 
-async function sqlGetAll(sql, params, res) {
+async function sqlGetAll(sql1, sql2, params, res) {
   /**
    * 解析sqlRun函数执行sql语句的结果，并通过res将执行结果返回给前端
-   * @param {sql} 将要执行的sql语句，string
-   * @param {params} sql语句的参数列表，array
+   * @param {sql1} 将要执行查询的sql语句，string
+   * @param {sql2} 用于统计数量的sql语句，string
+   * @param {params} 将要执行的sql语句的参数列表，array
    * @param {res} 响应体对象，object
    */
-  let data = await sqlRun(sql, params);
+  // 获取查询数据
+  let data = await sqlRun(sql1, params);
   data = data || [];
-  res.send(data);
+  // 获取数据总量，若参数列表内仅有分页信息，则不传额外参数
+  let totalCount;
+  if (params.length > 2) {
+    totalCount = await sqlRun(sql2, [params[0], params[0]]);
+    totalCount = totalCount[0]['count(?)'];
+  } else {
+    totalCount = await sqlRun(sql2, []);
+    console.log(totalCount);
+    totalCount = totalCount[0]['count(*)'];
+  }
+
+  res.send({
+    data: data,
+    length: data.length,
+    totalCount: totalCount,
+  });
 }
 
 async function sqlRead(sql, params) {

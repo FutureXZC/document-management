@@ -50,8 +50,8 @@ export default {
     let validateid = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("账号不能为空"));
-      } else if (!/^[A-Za-z0-9]+$/.test(value)) {
-        callback(new Error("账号只能输入字母和数字"));
+      } else if (!/^[0-9]+$/.test(value)) {
+        callback(new Error("账号只能数字"));
       } else {
         callback();
       }
@@ -82,6 +82,14 @@ export default {
       }
     };
   },
+
+  created() {
+    // 检测到用户登录过且没有退出系统，则自动跳转
+    if (window.sessionStorage.getItem("token")) {
+      this.$router.push("/submit");
+    }
+  },
+
   methods: {
     onSubmit(formName) {
       // 为表单绑定验证功能

@@ -1,6 +1,11 @@
 <template>
   <div class="submit-wrap">
-    <el-table :data="submitList" style="width: 100%" border v-loading="loading">
+    <el-table
+      :data="submitList"
+      style="width: 100%"
+      border
+      v-loading="loadingSubmitList"
+    >
       <el-table-column prop="releaseDate" label="发布日期" width="160">
       </el-table-column>
       <el-table-column prop="deadline" label="截止日期" width="160">
@@ -17,6 +22,7 @@
             type="primary"
             plain
             @click="handleDetail(scope.$index, scope.row)"
+            v-loading="scope.row.loadingFileNeededList"
             >详情</el-button
           >
           <el-dialog title="需求文件列表" :visible.sync="dialogTableVisible">
@@ -27,6 +33,7 @@
             </p>
             <el-divider></el-divider>
             <form
+              ref="fileForm"
               action="http://127.0.0.1:3000/submit/upload"
               method="post"
               enctype="multipart/form-data"
@@ -35,37 +42,50 @@
                 <el-table-column
                   prop="filename"
                   label="文件名"
-                  width="450"
+                  width="400"
                 ></el-table-column>
                 <el-table-column label="上传" width="250">
                   <template slot-scope="info">
                     <input
                       type="file"
                       :name="
-                        releaseDate + '_' + info.row['filename'] + '_' + user
+                        releaseDate +
+                          '_' +
+                          id +
+                          '_' +
+                          info.row['filename'] +
+                          '_' +
+                          user
                       "
                       size="50"
+                      class="fileBtn"
                     /> </template
                 ></el-table-column>
               </el-table>
-              <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogTableVisible = false">取 消</el-button>
-                <input type="submit" value="上传" />
-              </span>
             </form>
-            <iframe
-              id="uploadFrame"
-              name="uploadFrame"
-              style="display:none;"
-            ></iframe>
-          </el-dialog> </template
-      ></el-table-column>
+            <span slot="footer" class="dialog-footer">
+              <el-button @click="dialogTableVisible = false">取 消</el-button>
+              <el-button type="primary" @click="submit">上传</el-button>
+            </span>
+          </el-dialog>
+        </template></el-table-column
+      >
     </el-table>
+    <div class="pagination">
+      <el-pagination
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-size="pageSize"
+        layout="prev, pager, next, jumper"
+        :total="totalCount"
+      >
+      </el-pagination>
+    </div>
   </div>
 </template>
 
 <script>
-import { getSubmitList, getFileList, upload } from "@/api/submit";
+import { getSubmitList, getFileList } from "@/api/submit";
 
 export default {
   name: "submit",
@@ -74,20 +94,21 @@ export default {
       submitList: [], // 任务列表的表格数据
       fileNeededList: [], // 需求文件列表的表格数据
       user: "", // 用户名
+      id: "", // 用户id
       releaseDate: "", // 点击对应行的“详情”按钮时，记录该行任务的发布日期
+      currentPage: 1,
+      pageSize: 20,
+      totalCount: 1,
       dialogTableVisible: false,
-      loading: false
+      loadingSubmitList: false
     };
   },
 
   created() {
     // 加载任务列表的表格数据
     this.user = window.sessionStorage.getItem("username");
-    this.loading = true;
-    getSubmitList().then(res => {
-      this.submitList = res;
-    });
-    this.loading = false;
+    this.id = window.sessionStorage.getItem("id");
+    this.handleCurrentChange(1);
   },
 
   methods: {
@@ -95,17 +116,45 @@ export default {
      * 加载需求文件列表的表格数据
      */
     handleDetail(index, row) {
-      getFileList({ releaseDate: row["releaseDate"] }).then(res => {
+      // 按钮loading
+      this.$set(row, "loadingFileNeededList", true);
+      getFileList({
+        releaseDate: row.releaseDate
+      }).then(res => {
         this.fileNeededList = [];
         for (let i = 0; i < res.length; i++) {
           this.fileNeededList.push({
-            filename: res[i]["filename"]
+            filename: res.data[i].filename
           });
         }
+        // 点击对应行的“详情”按钮时，记录该行任务的发布日期
+        this.releaseDate = row.releaseDate;
+        this.dialogTableVisible = true;
+        // 按钮取消loading
+        this.$set(row, "loadingFileNeededList", false);
       });
-      // 点击对应行的“详情”按钮时，记录该行任务的发布日期
-      this.releaseDate = row["releaseDate"];
-      this.dialogTableVisible = true;
+    },
+    /*
+     * 按钮上传事件
+     */
+    submit() {
+      this.$refs["fileForm"].submit();
+    },
+
+    /*
+     * 切换分页
+     */
+    handleCurrentChange(val) {
+      this.currentPage = val;
+      this.loadingSubmitList = true;
+      getSubmitList({
+        currentPage: this.currentPage,
+        pageSize: this.pageSize
+      }).then(res => {
+        this.submitList = res.data;
+        this.totalCount = res.totalCount;
+      });
+      this.loadingSubmitList = false;
     }
   }
 };
@@ -118,8 +167,13 @@ export default {
 .tips {
   font-size: 16px;
 }
-.mark {
-  color: #67c23a;
-  font-size: 20px;
+.fileBtn {
+  font-size: 14px;
+}
+.pagination {
+  margin-top: 20px;
+}
+.el-dialog__wrapper {
+  transition-duration: 0.3s;
 }
 </style>

@@ -1,6 +1,8 @@
-export function getHistory(formData) {
+export function getHistory(id) {
   return fetch("http://127.0.0.1:3000/history/getHistory", {
-    method: "post"
+    method: "post",
+    body: JSON.stringify(id),
+    headers: { "Content-Type": "application/json" }
   }).then(res => {
     return res.json();
   });

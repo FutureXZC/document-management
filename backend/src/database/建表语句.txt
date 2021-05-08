@@ -14,8 +14,7 @@ create table taskList(
 	deadline char(19) not null,
 	name varchar(20) not null,
 	desc varchar(100) not null,
-	teacher int not null,
-	foreign key (teacherId) references users(id)
+	teacher varchar(5) not null
 );
 
 任务详细信息表（需求文件列表）：
@@ -30,5 +29,7 @@ create table taskInfo(
 create table history(
 	submitDate char(19) primary key not null,
 	releaseDate char(19) not null,
+	id int not null,
 	foreign key (releaseDate) references taskList(releaseDate)
 );
+select h.submitDate, t.name, t.desc, t.teacher from history h join taskList t on h.releaseDate = t.releaseDate where h.id = ? order by h.submitDate desc limit ?, ?

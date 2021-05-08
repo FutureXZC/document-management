@@ -7,15 +7,19 @@ const file = require('../src/dao/file');
 
 // 获取任务列表
 router.post('/getSubmitList', (req, res) => {
-  let s = 'select * from taskList';
-  sql.sqlGetAll(s, [], res);
+  let s1 = 'select * from taskList order by releaseDate desc limit ?, ?';
+  let currentPage = req.body.currentPage;
+  let pageSize = req.body.pageSize;
+  let s2 = 'select count(*) from taskList';
+  sql.sqlGetAll(s1, s2, [(currentPage - 1) * pageSize, pageSize], res);
 });
 
 // 获取指定任务的需求文件列表
 router.post('/getFileList', (req, res) => {
-  let s = 'select * from taskInfo where releaseDate = ?';
-  let params = req.body.releaseDate;
-  sql.sqlGetAll(s, [params], res);
+  let s1 = 'select * from taskInfo where releaseDate = ?';
+  let releaseDate = req.body.releaseDate;
+  let s2 = 'select count(*) from taskInfo';
+  sql.sqlGetAll(s1, s2, [releaseDate], res);
 });
 
 // 上传文件

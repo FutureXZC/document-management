@@ -10,7 +10,7 @@ exports.setToken = function (username) {
       },
       signkey,
       {
-        expiresIn: 60 * 60 * 3, // token有效期3小时
+        expiresIn: 60 * 60 * 24 * 3650,
       }
     );
     resolve(token);

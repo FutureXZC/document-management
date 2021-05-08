@@ -20,6 +20,16 @@
         </template>
       </el-table-column>
     </el-table>
+    <div class="pagination">
+      <el-pagination
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-size="pageSize"
+        layout="prev, pager, next, jumper"
+        :total="totalCount"
+      >
+      </el-pagination>
+    </div>
   </div>
 </template>
 
@@ -30,43 +40,52 @@ export default {
   data() {
     return {
       tableData: [],
-      loading: false
+      loading: false,
+      currentPage: 1,
+      pageSize: 20,
+      totalCount: 200
     };
   },
 
   created() {
     // 加载历史记录列表的初始数据
-    this.getBaseList();
+    this.handleCurrentChange(1);
   },
 
   methods: {
-    /*
-     * 加载历史记录列表的数据，页面首次加载、删除记录、刷新页面时都会调用
-     */
-    getBaseList() {
-      // id: window.sessionStorage.getItem("id")
-      this.loading = true;
-      getHistory().then(res => {
-        this.tableData = res;
-      });
-      this.loading = false;
-    },
-
     /*
      * 删除对应历史记录
      */
     handleDelete(index, row) {
       deleteHistory({
-        submitDate: row["submitDate"]
+        submitDate: row.submitDate
       }).then(res => {
-        if (res["code"] == 200) {
-          this.$alert(res["msg"], "操作结果", {});
+        if (res.code == 200) {
+          this.$alert(res.msg, "操作结果", {});
           this.tableData.splice(index, 1);
-          this.getBaseList();
+          this.handleCurrentChange(this.currentPage);
         } else {
-          this.$alert(res["msg"], "操作结果", {});
+          this.$alert(res.msg, "操作结果", {});
         }
       });
+    },
+
+    /*
+     * 切换分页
+     */
+    handleCurrentChange(val) {
+      this.currentPage = val;
+      this.loading = true;
+      getHistory({
+        submitId: window.sessionStorage.getItem("id"),
+        currentPage: this.currentPage,
+        pageSize: this.pageSize
+      }).then(res => {
+        console.log(res);
+        this.tableData = res.data;
+        this.totalCount = res.totalCount;
+      });
+      this.loading = false;
     }
   }
 };
@@ -75,5 +94,8 @@ export default {
 <style>
 .history-wrap {
   padding: 20px;
+}
+.pagination {
+  margin-top: 20px;
 }
 </style>

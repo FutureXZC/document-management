@@ -103,6 +103,7 @@ export default {
             date1: this.form.date1,
             date2: this.form.date2,
             desc: this.form.desc,
+            teacher: window.sessionStorage.getItem("username"),
             fileList: []
           };
           for (let i = 0; i < this.form.fileList.length; i++) {
