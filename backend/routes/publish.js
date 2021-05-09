@@ -7,12 +7,12 @@ router.post('/addTask', (req, res) => {
   let formData = req.body;
   if (sql.addTask(formData)) {
     res.send({
-      msg: '任务创建成功！',
+      msg: '任务创建成功',
       code: 200,
     });
   } else {
     res.send({
-      msg: '任务创建失败，请重试！',
+      msg: '任务创建失败，请重试',
       code: 500,
     });
   }

@@ -16,11 +16,7 @@ function upload(fileList, res) {
     // step 1、任务文件夹若不存在，则创建该文件夹
     toDoList.push(
       fileTools.exec(
-        // 'exist public\\upload\\' +
-        //   taskName +
-        //   ' || ' +
-        //   'md public\\upload\\' +
-        //   taskName
+        // 'mkdir public\\upload\\' + releaseDate + '_' + taskName
         'dir'
       )
     );

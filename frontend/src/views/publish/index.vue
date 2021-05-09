@@ -143,10 +143,14 @@ export default {
             formData.fileList.push(this.form.fileList[i]["filename"]);
           }
           addTask(formData).then(res => {
-            this.$message({
-              message: "任务创建成功！",
-              type: "success"
-            });
+            if (res.code === 200) {
+              this.$message({
+                message: res.msg,
+                type: "success"
+              });
+            } else {
+              this.$message.error(res.msg);
+            }
           });
         } else {
           return false;

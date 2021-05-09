@@ -2,6 +2,7 @@ const timeTools = require('../utils/timeTools');
 const sqlModel = require('../model/sqlDb');
 let db = sqlModel.db;
 let tokenTools = require('../token/token');
+let fileTools = require('../utils/fileTools');
 
 function login(formData, res) {
   /**
@@ -80,7 +81,7 @@ function addTask(formData) {
    */
   let isSuccess = true;
   let releaseDate = timeTools.getCurDate();
-  // 记录任务列表
+  // step 1、记录任务列表
   db.serialize(function () {
     let sql =
       'INSERT INTO taskList(`releaseDate`, `deadline`, `name`, `desc`, `teacher`, `teacherId`) VALUES (?, ?, ?, ?, ?, ?)';
@@ -102,7 +103,7 @@ function addTask(formData) {
         console.log('任务创建成功');
       }
     });
-    // 记录任务详细信息表（需求文件列表）
+    // step 2、记录任务详细信息表（需求文件列表）
     if (isSuccess) {
       sql = 'INSERT INTO `taskInfo`(`releaseDate`, `filename`) VALUES (?, ?)';
       obj = formData['fileList'];
@@ -118,9 +119,11 @@ function addTask(formData) {
           }
         });
       }
-    } else {
-      console.log('任务需求的文件列表记录失败，请重试');
     }
+    // step 3、创建用于存储文件的文件夹
+    // let command =
+    //   'mkdir public\\upload\\' + releaseDate + '_' + formData['name'];
+    // fileTools.exec(command);
   });
   return isSuccess;
 }

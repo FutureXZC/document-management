@@ -19,12 +19,12 @@ router.post('/deleteHistory', (req, res) => {
   let submitDate = req.body.submitDate;
   if (sql.deleteHistory(submitDate)) {
     res.send({
-      msg: '删除历史记录成功！',
+      msg: '删除历史记录成功',
       code: 200,
     });
   } else {
     res.send({
-      msg: '删除历史记录失败！请重试！',
+      msg: '删除历史记录失败，请重试',
       code: 500,
     });
   }
