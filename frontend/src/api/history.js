@@ -39,10 +39,5 @@ export function deleteTask(releaseDate) {
 }
 
 export function downloadTaskFile(releaseDate) {
-  let url = "http://118.24.211.84:3033/history/downloadTaskFile/" + releaseDate;
-  return fetch(url, {
-    method: "get"
-  }).then(res => {
-    return res.json();
-  });
+  window.location.href = `http://118.24.211.84:3033/history/downloadTaskFile/${releaseDate}`;
 }

@@ -98,20 +98,7 @@ export default {
      */
     handleDownload(index, row) {
       this.loading = true;
-      downloadTaskFile(row.releaseDate).then(res => {
-        console.log(res);
-        if (res.code === 200) {
-          this.$message({
-            message: "文件即将发起下载，请稍后",
-            type: "success"
-          });
-        } else {
-          this.$message({
-            message: res.msg,
-            type: "error"
-          });
-        }
-      });
+      downloadTaskFile(row.releaseDate);
       this.loading = false;
     }
   }
