@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import { getPublishedTask, deleteTask } from "@/api/history";
+import { getPublishedTask, deleteTask, downloadTaskFile } from "@/api/history";
 export default {
   name: "publishHistory",
   data() {
@@ -89,6 +89,28 @@ export default {
       }).then(res => {
         this.tableData = res.data;
         this.totalCount = res.totalCount;
+      });
+      this.loading = false;
+    },
+
+    /*
+     * 下载文件
+     */
+    handleDownload(index, row) {
+      this.loading = true;
+      downloadTaskFile(row.releaseDate).then(res => {
+        console.log(res);
+        if (res.code === 200) {
+          this.$message({
+            message: "文件即将发起下载，请稍后",
+            type: "success"
+          });
+        } else {
+          this.$message({
+            message: res.msg,
+            type: "error"
+          });
+        }
       });
       this.loading = false;
     }

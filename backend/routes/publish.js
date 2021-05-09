@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const sql = require('../src/Dao/sql');
+const sql = require('../src/dao/sql');
 
 // 创建任务，将任务的所有相关信息写入taskList和taskInfo表中
 router.post('/addTask', (req, res) => {

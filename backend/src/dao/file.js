@@ -13,32 +13,26 @@ function upload(fileList, res) {
     taskName = taskName[0]['name'];
     console.log(releaseDate, taskName, id);
     let toDoList = [];
-    // step 1、任务文件夹若不存在，则创建该文件夹
-    toDoList.push(
-      fileTools.exec(
-        // 'mkdir public\\upload\\' + releaseDate + '_' + taskName
-        'dir'
-      )
-    );
-    // step 2、将所有上传的文件移动到任务文件夹内
+    // step 1、将所有上传的文件移动到任务文件夹内
     for (let i = 0; i < fileList.length; i++) {
       let fileName = fileTools.getFileName(
         fileList[i]['fieldname'],
         fileList[i]['originalname']
       );
-      toDoList.push(
-        fileTools.exec(
-          'move ' +
-            fileList[i]['path'] +
-            ' ' +
-            'public\\upload\\' +
-            taskName +
-            '\\' +
-            fileName
-        )
-      );
+      let command =
+        'mv ' +
+        fileList[i]['path'] +
+        ' ' +
+        "public/upload/'" +
+        releaseDate +
+        '_' +
+        taskName +
+        "'/" +
+        fileName;
+      console.log(command);
+      toDoList.push(fileTools.exec(command));
     }
-    // step 3、将提交记录到数据库中
+    // step 2、将提交记录到数据库中
     toDoList.push(sql.addHistory(timeTools.getCurDate(), releaseDate, id));
     // 执行toDoList，并获取执行结果
     Promise.all(toDoList).then((result) => {
@@ -51,7 +45,7 @@ function upload(fileList, res) {
       if (flag) {
         res.status(200).render('index', { msg: '提交成功！' });
       } else {
-        res.status(501).reder('index', {
+        res.status(500).reder('index', {
           msg:
             '提交失败，请检查网络连接后重试！若多次重试依然失败，请联系管理员。',
         });
