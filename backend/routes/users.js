@@ -7,7 +7,6 @@ const sql = require('../src/dao/sql');
 router.post('/login', (req, res) => {
   let formData = req.body;
   formData['pwd'] = sha1(formData['pwd']).slice(0, 18);
-  console.log(formData);
   sql.login(formData, res);
 });
 

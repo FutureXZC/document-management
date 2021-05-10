@@ -180,7 +180,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .publish-wrap {
   padding: 20px;
 }

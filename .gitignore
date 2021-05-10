@@ -15,3 +15,5 @@ yarn-error.log*
 *.sln
 /backend/public/upload
 /backend/src/database
+/backend/public/static
+/backend/public/index.html
