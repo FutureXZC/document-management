@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import { getPublishedTask, deleteTask } from "@/api/history";
+import { getPublishedTask, deleteTask, downloadTaskFile } from "@/api/history";
 export default {
   name: "publishHistory",
   data() {
@@ -90,6 +90,15 @@ export default {
         this.tableData = res.data;
         this.totalCount = res.totalCount;
       });
+      this.loading = false;
+    },
+
+    /*
+     * 下载文件
+     */
+    handleDownload(index, row) {
+      this.loading = true;
+      downloadTaskFile(row.releaseDate);
       this.loading = false;
     }
   }

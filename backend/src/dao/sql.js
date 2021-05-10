@@ -120,10 +120,13 @@ function addTask(formData) {
         });
       }
     }
-    // step 3、创建用于存储文件的文件夹
-    // let command =
-    //   'mkdir public\\upload\\' + releaseDate + '_' + formData['name'];
-    // fileTools.exec(command);
+    // step 3、创建用于存储文件的文件夹，命名为“发布时间_任务名”
+    if (isSuccess) {
+      let command =
+        "mkdir ./public/upload/'" + releaseDate + '_' + formData['name'] + "'";
+      console.log(command);
+      isSuccess = fileTools.exec(command);
+    }
   });
   return isSuccess;
 }
@@ -184,24 +187,29 @@ function deleteTask(releaseDate, res) {
   });
 }
 
-function deleteHistory(submitData) {
+function deleteHistory(submitData, res) {
   /**
    * 删除任务提交的历史记录
    * @param {submitData} 提交日期，string
-   * @returns {isSuccess} 是否删除成功的标志，boolean
+   * @param {res} 响应体对象，object
    */
-  let isSuccess = true;
   let sql = 'DELETE FROM history WHERE submitDate = ?';
   db.run(sql, [submitData], (err) => {
     if (err) {
-      isSuccess = false;
       console.log('删除历史记录失败，请重试');
       console.log(err);
+      res.send({
+        msg: '删除历史记录失败，请重试',
+        code: 500,
+      });
     } else {
       console.log('删除历史记录成功');
+      res.send({
+        msg: '删除历史记录成功',
+        code: 200,
+      });
     }
   });
-  return isSuccess;
 }
 
 function addHistory(submitDate, releaseDate, id) {

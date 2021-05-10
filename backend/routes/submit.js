@@ -5,6 +5,10 @@ var multer = require('multer');
 const sql = require('../src/dao/sql');
 const file = require('../src/dao/file');
 
+// router.get('/', (req, res) => {
+//   res.redirect('/submit');
+// });
+
 // 获取任务列表
 router.post('/getSubmitList', (req, res) => {
   let s1 = 'select * from taskList order by releaseDate desc limit ?, ?';
@@ -28,7 +32,14 @@ router.post(
   multer({ dest: './public/upload/' }).any(),
   (req, res, next) => {
     let fileList = req.files;
-    file.upload(fileList, res);
+    if (fileList.length === 0) {
+      console.log('文件列表为空');
+      res.status(500).reder('index', {
+        msg: '您没有提交任何文件。请返回页面添加文件再次提交。',
+      });
+    } else {
+      file.upload(fileList, res);
+    }
   }
 );
 

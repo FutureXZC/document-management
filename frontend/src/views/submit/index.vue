@@ -34,7 +34,7 @@
             <el-divider></el-divider>
             <form
               ref="fileForm"
-              action="http://127.0.0.1:3000/submit/upload"
+              action="http://118.24.211.84:3033/submit/upload"
               method="post"
               enctype="multipart/form-data"
             >
@@ -55,6 +55,7 @@
                           '_' +
                           info.row['filename'] +
                           '_' +
+                          id +
                           user
                       "
                       size="50"
@@ -64,8 +65,8 @@
               </el-table>
             </form>
             <span slot="footer" class="dialog-footer">
-              <el-button @click="dialogTableVisible = false">取 消</el-button>
-              <el-button type="primary" @click="submit">上传</el-button>
+              <el-button @click="dialogTableVisible = false">取消</el-button>
+              <el-button type="primary" @click="submit">提交</el-button>
             </span>
           </el-dialog>
         </template></el-table-column

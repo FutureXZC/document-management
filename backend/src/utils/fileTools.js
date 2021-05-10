@@ -65,9 +65,11 @@ function exec(command) {
     if (error) {
       console.error('执行失败：' + command);
       console.log(error);
+      console.log(stdout)
       return false;
     }
     console.log('执行成功：' + command);
+    console.log(stdout)
   });
   return true;
 }
