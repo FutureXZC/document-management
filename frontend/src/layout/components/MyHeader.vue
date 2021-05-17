@@ -33,7 +33,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .myHeader {
   background-color: #333;
   color: #fff;

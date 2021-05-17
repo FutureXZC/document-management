@@ -105,7 +105,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .history-wrap {
   padding: 20px;
 }

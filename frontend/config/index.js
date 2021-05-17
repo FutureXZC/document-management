@@ -29,7 +29,6 @@ module.exports = {
     // Various Dev Server settings
     // host: '127.0.0.1', // can be overwritten by process.env.HOST
     host: "172.30.0.13", // can be overwritten by process.env.HOST
-    // host: '118.24.211.84', // can be overwritten by process.env.HOST
     port: 7077, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
@@ -57,16 +56,18 @@ module.exports = {
 
     // Paths
     assetsRoot: path.resolve(__dirname, "../dist"),
-    assetsSubDirectory: "static",
-    assetsPublicPath: "/",
+    assetsSubDirectory: "./static",
+    assetsPublicPath: "./",
 
     /**
      * Source Maps
      */
 
-    productionSourceMap: true,
+    //浏览器下无源码
+    productionSourceMap: false,
+    devtool: "#nosources-source-map",
     // https://webpack.js.org/configuration/devtool/#production
-    devtool: "#source-map",
+    // devtool: "#source-map",
 
     // Gzip off by default as many popular static hosts such as
     // Surge or Netlify already gzip all static assets for you.
