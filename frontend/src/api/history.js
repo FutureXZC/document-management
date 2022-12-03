@@ -1,5 +1,5 @@
 export function getHistory(id) {
-  return fetch("http://118.24.211.84:3033/history/getHistory", {
+  return fetch("http://121.5.64.221:3033/history/getHistory", {
     method: "post",
     body: JSON.stringify(id),
     headers: { "Content-Type": "application/json" }
@@ -9,7 +9,7 @@ export function getHistory(id) {
 }
 
 export function deleteHistory(submitDate) {
-  return fetch("http://118.24.211.84:3033/history/deleteHistory", {
+  return fetch("http://121.5.64.221:3033/history/deleteHistory", {
     method: "post",
     body: JSON.stringify(submitDate),
     headers: { "Content-Type": "application/json" }
@@ -19,7 +19,7 @@ export function deleteHistory(submitDate) {
 }
 
 export function getPublishedTask(teacher) {
-  return fetch("http://118.24.211.84:3033/history/getPublishedTask", {
+  return fetch("http://121.5.64.221:3033/history/getPublishedTask", {
     method: "post",
     body: JSON.stringify(teacher),
     headers: { "Content-Type": "application/json" }
@@ -29,7 +29,7 @@ export function getPublishedTask(teacher) {
 }
 
 export function deleteTask(releaseDate) {
-  return fetch("http://118.24.211.84:3033/history/deleteTask", {
+  return fetch("http://121.5.64.221:3033/history/deleteTask", {
     method: "post",
     body: JSON.stringify(releaseDate),
     headers: { "Content-Type": "application/json" }
@@ -39,5 +39,5 @@ export function deleteTask(releaseDate) {
 }
 
 export function downloadTaskFile(releaseDate) {
-  window.location.href = `http://118.24.211.84:3033/history/downloadTaskFile/${releaseDate}`;
+  window.location.href = `http://121.5.64.221:3033/history/downloadTaskFile/${releaseDate}`;
 }

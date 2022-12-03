@@ -34,7 +34,7 @@
             <el-divider></el-divider>
             <form
               ref="fileForm"
-              action="http://118.24.211.84:3033/submit/upload"
+              action="http://121.5.64.221:3033/submit/upload"
               method="post"
               enctype="multipart/form-data"
             >

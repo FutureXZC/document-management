@@ -1,5 +1,5 @@
 export function getSubmitList(pageInfo) {
-  return fetch("http://118.24.211.84:3033/submit/getSubmitList", {
+  return fetch("http://121.5.64.221:3033/submit/getSubmitList", {
     method: "post",
     body: JSON.stringify(pageInfo),
     headers: { "Content-Type": "application/json" }
@@ -9,7 +9,7 @@ export function getSubmitList(pageInfo) {
 }
 
 export function getFileList(releaseDate) {
-  return fetch("http://118.24.211.84:3033/submit/getFileList", {
+  return fetch("http://121.5.64.221:3033/submit/getFileList", {
     method: "post",
     body: JSON.stringify(releaseDate),
     headers: { "Content-Type": "application/json" }
@@ -19,7 +19,7 @@ export function getFileList(releaseDate) {
 }
 
 export function upload(formData) {
-  return fetch("http://118.24.211.84:3033/submit/upload", {
+  return fetch("http://121.5.64.221:3033/submit/upload", {
     method: "post",
     body: JSON.stringify(formData),
     headers: { "Content-Type": "application/json" }
