@@ -42,7 +42,7 @@ body > .el-container {
   width: 100%;
   height: 40px;
   color: white;
-  font-size: 16px;
+  font-size: 14px;
   text-align: center;
   background-color: #333;
   display: flex;

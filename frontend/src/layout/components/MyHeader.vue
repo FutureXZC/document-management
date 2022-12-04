@@ -1,6 +1,6 @@
 <template>
   <div class="myHeader">
-    <span>文件管理系统</span>
+    <span id="sys-name">曦开文件管理系统</span>
     <div class="userName">
       <el-dropdown>
         <span>{{ this.user }}</span>
@@ -40,6 +40,9 @@ export default {
   text-align: center;
   line-height: 60px;
   padding: 0;
+}
+#sys-name {
+  font-size: 18px;
 }
 .userName {
   display: inline-block;

@@ -145,7 +145,8 @@ export default {
 }
 
 .title {
-  margin: 35px 90px;
+  width: 640px;
+  margin: 64px 90px;
 }
 
 .login-box {
