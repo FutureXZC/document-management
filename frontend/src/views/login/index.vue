@@ -1,41 +1,48 @@
 <template>
-  <div class="login-wrap">
-    <div>
-      <img src="static/images/logo.png" alt="曦开实验室" class="logo" />
-      <img src="static/images/title.png" alt="文件管理系统" class="title" />
+  <div>
+    <div class="login-wrap">
+      <div>
+        <img src="static/images/logo.png" alt="曦开实验室" class="logo" />
+        <img src="static/images/title.png" alt="文件管理系统" class="title" />
+      </div>
+      <el-form
+        ref="loginForm"
+        :model="form"
+        :rules="rules"
+        label-width="80px"
+        class="login-box"
+        label-position="top"
+      >
+        <h3 class="login-title">欢迎登录</h3>
+        <el-form-item label="账号" prop="id" size="large">
+          <div class="login-form-wrap">
+            <el-input
+              type="text"
+              placeholder="账号为您的工号"
+              v-model="form.id"
+            />
+          </div>
+        </el-form-item>
+        <el-form-item label="密码" prop="pwd">
+          <div class="login-form-wrap">
+            <el-input
+              placeholder="请输入密码"
+              v-model="form.pwd"
+              show-password
+            />
+          </div>
+        </el-form-item>
+        <el-form-item>
+          <div class="login-btn">
+            <el-button v-on:click="register">注册</el-button>
+            <el-button type="primary" v-on:click="onSubmit('loginForm')"
+              >登录</el-button
+            >
+          </div>
+        </el-form-item>
+      </el-form>
     </div>
-    <el-form
-      ref="loginForm"
-      :model="form"
-      :rules="rules"
-      label-width="80px"
-      class="login-box"
-      label-position="top"
-    >
-      <h3 class="login-title">欢迎登录</h3>
-      <el-form-item label="账号" prop="id" size="large">
-        <div class="login-form-wrap">
-          <el-input
-            type="text"
-            placeholder="账号为您的工号"
-            v-model="form.id"
-          />
-        </div>
-      </el-form-item>
-      <el-form-item label="密码" prop="pwd">
-        <div class="login-form-wrap">
-          <el-input placeholder="请输入密码" v-model="form.pwd" show-password />
-        </div>
-      </el-form-item>
-      <el-form-item>
-        <div class="login-btn">
-          <el-button v-on:click="register">注册</el-button>
-          <el-button type="primary" v-on:click="onSubmit('loginForm')"
-            >登录</el-button
-          >
-        </div>
-      </el-form-item>
-    </el-form>
+    <div class="icp-record-blue">苏ICP备19034356号-1</div>
   </div>
 </template>
 
@@ -168,5 +175,19 @@ export default {
 
 .login-btn {
   text-align: center;
+}
+.icp-record-blue {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 40px;
+  color: white;
+  font-size: 16px;
+  line-height: 40px;
+  text-align: center;
+  background-color: #68a3be;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
